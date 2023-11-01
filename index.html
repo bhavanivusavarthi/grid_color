@@ -1,0 +1,72 @@
+<script src="https://cdn.jsdelivr.net/npm/p5"></script>
+<script>
+const canvasSize = 300
+
+let grid = []
+
+
+function randomBlock() {
+  return {
+    r: parseInt(random(255)),
+    g: parseInt(random(255)),
+    b: parseInt(random(255))
+  }
+}
+function generateGrid(size){
+  let grid = []
+
+  for(let x = 0; x < size; x++){
+    let row = []
+    for(let y = 0; y < size; y++){
+      row.push(randomBlock())
+    }
+    grid.push(row)
+  }
+  return grid
+}
+
+function changeTileColor(event){
+  console.log("changeTileColor event", event)
+  const {layerX, layerY} = event
+  console.log("changeTileColor layerX", layerX)
+  console.log("changeTileColor layerY", layerY)
+
+  const tileSize = canvasSize / grid.length
+  console.log("changeTileColor tileSize", tileSize)
+
+  const x = Math.floor(layerX / tileSize)
+  console.log("changeTileColor x", x)
+  const y = Math.floor(layerY / tileSize)
+
+  grid[x][y] = randomBlock()
+
+  redraw()
+}
+
+
+
+
+
+function setup() {
+  console.log("setup")
+  const canvas = createCanvas(canvasSize, canvasSize)
+  canvas.mouseClicked(changeTileColor)
+
+  grid = generateGrid(3)
+
+  const saveButton = createButton('Download Image')
+  saveButton.mousePressed(() => save(canvas, '8bitImage.jpg'))
+  noLoop()
+}
+
+function draw() {
+  const titleSize = canvasSize / grid.length
+
+  grid.forEach((row, x) => {
+      row.forEach((element, y) => {
+        fill(element.r, element.g, element.b)
+        square(x * titleSize, y * titleSize, titleSize)
+      })
+  })
+}
+</script>
